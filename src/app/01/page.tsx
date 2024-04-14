@@ -1,7 +1,7 @@
 "use client"
 
 // @ts-ignore
-import canvasSketch from "canvas-sketch";
+import canvasSketch from "../../../canvas-sketch/lib/canvas-sketch";
 import React, {useCallback, useEffect, useRef} from "react";
 import PageWrapper from "@/components/PageWrapper";
 
@@ -38,16 +38,20 @@ export default function Home() {
         x = ix + (w + gap) * i;
         y = iy + (h + gap) * j;
 
+        context.strokeStyle = 'white';
         context.beginPath();
         context.rect(x, y, w, h);
         context.stroke();
-        context.strokeStyle = 'green';
+
+        // Draw the text
+        context.fillText(`i:${i}, j:${j}`, x + w / 2, y + h / 2); // Position text in the center of the box
+
 
         if (Math.random() > 0.5) {
+          context.strokeStyle = 'white';
           context.beginPath();
           context.rect(x + off / 2, y + off / 2, w - off, h - off);
           context.stroke();
-          context.strokeStyle = 'white';
         }
       }
     }

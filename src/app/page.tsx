@@ -1,7 +1,7 @@
 "use client"
 
 // @ts-ignore
-import canvasSketch from "canvas-sketch";
+import canvasSketch from "../../canvas-sketch/lib/canvas-sketch";
 import React, {useCallback, useEffect, useRef} from "react";
 import PageWrapper from '@/components/PageWrapper'
 
