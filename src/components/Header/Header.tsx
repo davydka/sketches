@@ -11,6 +11,11 @@ import {
 } from "@/components/Nav"
 import Icon from '@/assets/icons/comedy-and-tragedy.svg'
 
+const pages = [
+  '01',
+  '02'
+]
+
 const LinkItem = ({href, children}: { href: string, children: React.ReactNode }) => {
   return (
     <Link href={href} className='w-full inline-block hover:bg-neutral-800 p-2 rounded'>
@@ -28,7 +33,7 @@ const Header = ({className}: {
         <NavTrigger className='focus:outline-none'>
           <Icon className='h-6 w-6'/>
         </NavTrigger>
-        <NavContent sideOffset={12} className='bg-black '>
+        <NavContent sideOffset={12} className='bg-black ml-4'>
           <NavLabel>
             <LinkItem href='/'>
               ≼⓪≽
@@ -37,11 +42,9 @@ const Header = ({className}: {
 
           <NavSeparator/>
 
-          <NavItem>
-            <LinkItem href='/01'>
-              01
-            </LinkItem>
-          </NavItem>
+          {pages.map((page) => (
+            <NavItem key={page}><LinkItem href={page}>{page}</LinkItem></NavItem>
+          ))}
         </NavContent>
       </Nav>
     </div>
