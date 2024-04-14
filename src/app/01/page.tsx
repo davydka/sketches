@@ -2,7 +2,7 @@
 
 // @ts-ignore
 import canvasSketch from "canvas-sketch";
-import React, {useEffect, useRef} from "react";
+import React, {useCallback, useEffect, useRef} from "react";
 import PageWrapper from "@/components/PageWrapper";
 
 export type CanvasDrawingProps = {
@@ -18,7 +18,7 @@ const HEIGHT = 400;
 export default function Home() {
   const ref = useRef<HTMLCanvasElement | null>(null);
 
-  const draw = ({context, width, height, playhead, ...rest}: CanvasDrawingProps) => {
+  const draw = useCallback(({context, width, height, playhead, ...rest}: CanvasDrawingProps) => {
     context.fillStyle = 'black';
     context.fillRect(0, 0, width, height);
     context.lineWidth = width * 0.01;
@@ -51,7 +51,7 @@ export default function Home() {
         }
       }
     }
-  };
+  }, []);
 
   useEffect(() => {
     canvasSketch(() => {
