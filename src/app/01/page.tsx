@@ -69,7 +69,7 @@ export default function Home() {
       canvas: ref.current,
       animate: true,
       duration: 3,
-      fps: 30
+      fps: 30, // export frame rate
     });
   }, [draw]);
 
