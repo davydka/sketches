@@ -20,7 +20,7 @@ export default function Home() {
 
   const draw = useCallback(({context, width, height, playhead, ...rest}: CanvasDrawingProps) => {
     // Fill the canvas with pink
-    context.fillStyle = 'pink';
+    context.fillStyle = 'black';
     context.fillRect(0, 0, width, height);
 
     // Get a seamless 0..1 value for our loop
