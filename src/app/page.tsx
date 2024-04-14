@@ -1,9 +1,9 @@
 "use client"
 
-import React, {useEffect, useRef} from "react";
-import Image from "next/image";
 // @ts-ignore
 import canvasSketch from "canvas-sketch";
+import React, {useEffect, useRef} from "react";
+import PageWrapper from '@/components/PageWrapper'
 
 export type CanvasDrawingProps = {
   context: CanvasRenderingContext2D;
@@ -45,8 +45,6 @@ export default function Home() {
   };
 
   useEffect(() => {
-    console.log("running canvas useEffect");
-
     canvasSketch(() => {
       return draw
     }, {
@@ -60,27 +58,13 @@ export default function Home() {
       duration: 3,
       fps: 30
     });
-
-    return function cleanUp() {
-      console.log("Canvas unmounting");
-    };
   }, [draw]);
 
   return (
-    <main className="flex p-24 min-h-screen flex-col items-center">
-      <div className="w-full items-center justify-between font-mono text-sm">
-        <Image
-          src="/comedy-and-tragedy.svg"
-          alt="Comedy & Tragedy"
-          className="dark:invert"
-          width={100}
-          height={100}
-          priority
-        />
-      </div>
+    <PageWrapper>
       <canvas
         ref={ref}
       />
-    </main>
+    </PageWrapper>
   );
 }
