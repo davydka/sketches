@@ -12,8 +12,8 @@ export type CanvasDrawingProps = {
   playhead: number;
 };
 
-const WIDTH = 400;
-const HEIGHT = 400;
+const WIDTH = 800;
+const HEIGHT = 800;
 
 export default function Home() {
   const ref = useRef<HTMLCanvasElement | null>(null);
