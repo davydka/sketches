@@ -1,7 +1,9 @@
 "use client";
 
 // @ts-ignore
-import canvasSketch from "../../../canvas-sketch/lib/canvas-sketch";
+// import canvasSketch from "../../../canvas-sketch/lib/canvas-sketch";
+// @ts-ignore
+import canvasSketch from "canvas-sketch";
 // @ts-ignore
 import { math, random } from "canvas-sketch-util";
 import React, { useCallback, useEffect, useRef } from "react";
