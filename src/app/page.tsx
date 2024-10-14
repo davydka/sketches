@@ -5,6 +5,7 @@
 // @ts-ignore
 import canvasSketch from "canvas-sketch";
 import React, { useCallback, useEffect, useRef } from "react";
+import { useAppSelector } from "@/store/hooks";
 import PageWrapper from "@/components/PageWrapper";
 
 export type CanvasDrawingProps = {
@@ -14,11 +15,9 @@ export type CanvasDrawingProps = {
   playhead: number;
 };
 
-const WIDTH = 800;
-const HEIGHT = 800;
-
 export default function Home() {
   const ref = useRef<HTMLCanvasElement | null>(null);
+  const { centerColumnTarget } = useAppSelector((state) => state.ui);
 
   const draw = useCallback(
     ({ context, width, height, playhead, ...rest }: CanvasDrawingProps) => {
@@ -50,12 +49,14 @@ export default function Home() {
   );
 
   useEffect(() => {
+    if (!centerColumnTarget) return;
+
     canvasSketch(
       () => {
         return draw;
       },
       {
-        dimensions: [WIDTH, HEIGHT],
+        dimensions: [centerColumnTarget, centerColumnTarget],
         units: "px",
         resizeCanvas: true,
         styleCanvas: true,
@@ -66,7 +67,7 @@ export default function Home() {
         fps: 30, // export frame rate
       },
     );
-  }, [draw]);
+  }, [centerColumnTarget, draw]);
 
   return (
     <PageWrapper>
