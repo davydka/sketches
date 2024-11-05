@@ -7,6 +7,7 @@ import canvasSketch from "canvas-sketch";
 import React, { useCallback, useEffect, useRef } from "react";
 import { useAppSelector } from "@/store/hooks";
 import PageWrapper from "@/components/PageWrapper";
+import { Canvas } from "@/components/Canvas";
 
 export type CanvasDrawingProps = {
   context: CanvasRenderingContext2D;
@@ -71,7 +72,7 @@ export default function Home() {
 
   return (
     <PageWrapper>
-      <canvas ref={ref} />
+      <Canvas ref={ref} />
     </PageWrapper>
   );
 }

@@ -9,6 +9,7 @@ import { math, random } from "canvas-sketch-util";
 import React, { useCallback, useEffect, useRef } from "react";
 import PageWrapper from "@/components/PageWrapper";
 import { useAppSelector } from "@/store/hooks";
+import { Canvas } from "@/components/Canvas";
 
 export type CanvasDrawingProps = {
   context: CanvasRenderingContext2D;
@@ -98,7 +99,7 @@ export default function Home() {
 
   return (
     <PageWrapper>
-      <canvas ref={ref} />
+      <Canvas ref={ref} />
     </PageWrapper>
   );
 }
