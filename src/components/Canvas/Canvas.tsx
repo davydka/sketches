@@ -13,7 +13,11 @@ const Canvas = React.forwardRef<
   return (
     <canvas
       ref={ref}
-      className={cn(showDevtools && "border border-white", className)}
+      className={cn(
+        "rounded-lg",
+        showDevtools && "border border-white",
+        className,
+      )}
       {...props}
     />
   );

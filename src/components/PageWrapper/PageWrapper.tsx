@@ -115,7 +115,7 @@ const PageWrapper = ({ children }: { children: React.ReactNode }) => {
         <div
           className={cn([
             "min-w-0", // Override default grid behavior. By default, a grid item cannot be smaller than the size of its content.
-            "relative items-center justify-center",
+            "relative flex justify-center md:items-center",
           ])}
           ref={centerColumnRef}
         >
