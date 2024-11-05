@@ -76,15 +76,18 @@ const PageWrapper = ({ children }: { children: React.ReactNode }) => {
   // endregion
 
   const MenuList = ({
+    className,
     items,
   }: {
+    className?: string;
     items: string[]; // todo: temp item datatype
   }) => {
     return (
       <ul
         className={cn([
-          "bg-secondary p text-secondary-foreground flex items-center rounded-lg shadow-md md:flex-col",
+          "bg-secondary p text-secondary-foreground flex flex-1 items-center rounded-lg shadow-md md:flex-col",
           showDevtools && "border border-white",
+          className,
         ])}
       >
         {items.map((item, index) => (
@@ -98,20 +101,34 @@ const PageWrapper = ({ children }: { children: React.ReactNode }) => {
     <main className="grid min-h-screen grid-rows-[auto_1fr_auto] px-4 py-4">
       <Header className="mb-4" />
 
-      <main className="grid grid-cols-1 grid-rows-[40px_1fr_40px] gap-4 md:grid-cols-[40px_1fr_40px] md:grid-rows-1">
+      <main className="grid grid-cols-1 grid-rows-[40px_40px_1fr] gap-4 md:grid-cols-[40px_1fr_40px] md:grid-rows-1">
         <MenuList items={["◉", "✿", "✿"]} />
+
+        {/*Mobile*/}
+        <MenuList
+          className={cn([
+            "flex flex-row-reverse md:hidden", // Show on mobile
+          ])}
+          items={["◉", "✿", "✿"]}
+        />
 
         <div
           className={cn([
             "min-w-0", // Override default grid behavior. By default, a grid item cannot be smaller than the size of its content.
-            "relative flex items-center justify-center",
+            "relative items-center justify-center",
           ])}
           ref={centerColumnRef}
         >
           {children}
         </div>
 
-        <MenuList items={["◉", "✿", "✿"]} />
+        {/*Desktop*/}
+        <MenuList
+          className={cn([
+            "hidden md:flex", // Hide on mobile
+          ])}
+          items={["◉", "✿", "✿"]}
+        />
       </main>
 
       <footer
