@@ -9,7 +9,7 @@ import {
   addEdge,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
-import { useAppDispatch } from "@/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { setCenterColumnTarget } from "@/store/slices/ui.slice";
 import Header from "@/components/Header";
 import { useGlobalRefs, GlobalRefKeys } from "@/hooks/useGlobalRefs";
@@ -25,6 +25,7 @@ const initialEdges = [{ id: "e1-2", source: "1", target: "2" }];
 
 const PageWrapper = ({ children }: { children: React.ReactNode }) => {
   const dispatch = useAppDispatch();
+  const { showDevtools } = useAppSelector((state) => state.devtools);
 
   const centerColumnRef = useRef<HTMLDivElement>(null);
   const { setRef } = useGlobalRefs();
@@ -62,23 +63,43 @@ const PageWrapper = ({ children }: { children: React.ReactNode }) => {
     if (width > height) {
       target = height;
     }
-    setDimensions({ width, height, target });
+
+    if (showDevtools) {
+      console.log("PageWrapper handleResize - setCenterColumnTarget");
+      console.table({ target, width, height });
+    }
+
+    setDimensions({ target, width, height });
     dispatch(setCenterColumnTarget(target));
-  }, [dimensions.width, dimensions.height, dispatch]);
+  }, [dimensions.width, dimensions.height, showDevtools, dispatch]);
   useResize(handleResize);
   // endregion
+
+  const MenuList = ({
+    items,
+  }: {
+    items: string[]; // todo: temp item datatype
+  }) => {
+    return (
+      <ul
+        className={cn([
+          "bg-secondary p text-secondary-foreground flex items-center rounded-lg shadow-md md:flex-col",
+          showDevtools && "border border-white",
+        ])}
+      >
+        {items.map((item, index) => (
+          <li key={index}>{item}</li>
+        ))}
+      </ul>
+    );
+  };
 
   return (
     <main className="grid min-h-screen grid-rows-[auto_1fr_auto] px-4 py-4">
       <Header className="mb-4" />
 
-      <main className="grid grid-cols-1 gap-4 p-4 md:grid-cols-[200px_1fr_200px]">
-        <div className="bg-secondary rounded-lg p-4 shadow-md">
-          <h2 className="mb-2 text-xl font-semibold">Column left</h2>
-          <p className="text-secondary-foreground">
-            This is the content for column left.
-          </p>
-        </div>
+      <main className="grid grid-cols-1 grid-rows-[40px_1fr_40px] gap-4 md:grid-cols-[40px_1fr_40px] md:grid-rows-1">
+        <MenuList items={["◉", "✿", "✿"]} />
 
         <div
           className={cn([
@@ -90,32 +111,35 @@ const PageWrapper = ({ children }: { children: React.ReactNode }) => {
           {children}
         </div>
 
-        <div className="bg-secondary rounded-lg p-4 shadow-md">
-          <h2 className="mb-2 text-xl font-semibold">Column right</h2>
-          <p className="text-secondary-foreground">
-            This is the content for column right.
-          </p>
-        </div>
+        <MenuList items={["◉", "✿", "✿"]} />
       </main>
 
-      <footer>hello footer</footer>
+      <footer
+        className={cn([
+          "bg-secondary text-secondary-foreground p-4 text-center",
+        ])}
+      >
+        皿
+      </footer>
 
       <div className="pointer-events-none fixed inset-0 z-50 h-full">
-        <ReactFlow
-          nodes={nodes}
-          edges={edges}
-          onNodesChange={onNodesChange}
-          onEdgesChange={onEdgesChange}
-          onConnect={onConnect}
-          colorMode="dark"
-          proOptions={{ hideAttribution: true }}
-          style={{
-            backgroundColor: "transparent",
-          }}
-        >
-          <MiniMap />
-          <Controls />
-        </ReactFlow>
+        {showDevtools && (
+          <ReactFlow
+            nodes={nodes}
+            edges={edges}
+            onNodesChange={onNodesChange}
+            onEdgesChange={onEdgesChange}
+            onConnect={onConnect}
+            colorMode="dark"
+            proOptions={{ hideAttribution: true }}
+            style={{
+              backgroundColor: "transparent",
+            }}
+          >
+            <MiniMap />
+            <Controls />
+          </ReactFlow>
+        )}
       </div>
     </main>
   );
