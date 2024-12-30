@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
-import { store } from "@/store";
+import { PersistGate } from "redux-persist/integration/react";
+import { store, persistor } from "@/store";
 import { useAppDispatch } from "@/store/hooks";
 import { Provider } from "react-redux";
 import { GlobalRefsProvider } from "@/hooks/useGlobalRefs/useGlobalRefs";
@@ -20,9 +21,11 @@ const KeyCombos = ({ children }: { children: React.ReactNode }) => {
 const Providers = ({ children }: { children: React.ReactNode }) => {
   return (
     <Provider store={store}>
-      <KeyCombos>
-        <GlobalRefsProvider>{children}</GlobalRefsProvider>
-      </KeyCombos>
+      <PersistGate loading={null} persistor={persistor}>
+        <KeyCombos>
+          <GlobalRefsProvider>{children}</GlobalRefsProvider>
+        </KeyCombos>
+      </PersistGate>
     </Provider>
   );
 };
