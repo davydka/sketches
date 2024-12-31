@@ -1,78 +1,92 @@
 "use client";
 
-// @ts-ignore
-// import canvasSketch from "../../canvas-sketch/lib/canvas-sketch";
-// @ts-ignore
-import canvasSketch from "canvas-sketch";
-import React, { useCallback, useEffect, useRef } from "react";
+import React, { useCallback, useState } from "react";
 import { useAppSelector } from "@/store/hooks";
 import PageWrapper from "@/components/PageWrapper";
-import { Canvas } from "@/components/Canvas";
-
-export type CanvasDrawingProps = {
-  context: CanvasRenderingContext2D;
-  width: number;
-  height: number;
-  playhead: number;
-};
+import { type Sketch } from "@p5-wrapper/react";
+import { NextReactP5Wrapper } from "@p5-wrapper/next";
 
 export default function Home() {
-  const ref = useRef<HTMLCanvasElement | null>(null);
-  const { centerColumnTarget } = useAppSelector((state) => state.ui);
+  const centerColumnTarget = useAppSelector(
+    (state) => state.ui.centerColumnTarget,
+  );
+  const showDevtools = useAppSelector((state) => state.devtools.showDevtools);
 
-  const draw = useCallback(
-    ({ context, width, height, playhead, ...rest }: CanvasDrawingProps) => {
-      // Fill the canvas with pink
-      context.fillStyle = "black";
-      context.fillRect(0, 0, width, height);
+  const [state, setState] = useState({
+    speed: 0.01,
+  });
 
-      // Get a seamless 0..1 value for our loop
-      const t = Math.sin(playhead * Math.PI);
-
-      // Animate the thickness with 'playhead' prop
-      const thickness = Math.max(5, Math.pow(t, 0.55) * width * 0.5);
-
-      // Rotate with PI to create a seamless animation
-      const rotation = playhead * Math.PI;
-
-      // Draw a rotating white rectangle around the center
-      const cx = width / 2;
-      const cy = height / 2;
-      const length = height * 0.5;
-      context.fillStyle = "white";
-      context.save();
-      context.translate(cx, cy);
-      context.rotate(rotation);
-      context.fillRect(-thickness / 2, -length / 2, thickness, length);
-      context.restore();
+  const onRotationChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      setState(() => ({
+        speed: parseFloat(event.target.value),
+      }));
     },
     [],
   );
 
-  useEffect(() => {
-    if (!centerColumnTarget) return;
+  const sketch: Sketch = useCallback(
+    (p5) => {
+      let font: typeof p5.Font;
+      let speed = 0.01;
 
-    canvasSketch(
-      () => {
-        return draw;
-      },
-      {
-        dimensions: [centerColumnTarget, centerColumnTarget],
-        units: "px",
-        resizeCanvas: true,
-        styleCanvas: true,
-        scaleToView: false,
-        canvas: ref.current,
-        animate: true,
-        duration: 3,
-        fps: 30, // export frame rate
-      },
-    );
-  }, [centerColumnTarget, draw]);
+      p5.preload = () => {
+        font = p5.loadFont("fonts/Inter_18pt-Regular.ttf");
+      };
+
+      p5.setup = () => {
+        p5.createCanvas(centerColumnTarget, centerColumnTarget, p5.WEBGL);
+        p5.textFont(font);
+        p5.textSize(12);
+      };
+
+      p5.updateWithProps = (props: any) => {
+        if (typeof props.speed === "number") {
+          speed = props.speed;
+        }
+      };
+
+      p5.draw = () => {
+        p5.background(0, 0, 0, 0); // transparent background
+        p5.noStroke(); // remove the plane outline
+        p5.fill(255, 255, 255); // white fill
+
+        if (showDevtools) {
+          let fps = p5.frameRate().toFixed(2);
+          // Draw text in the bottom-left corner
+          p5.push();
+          p5.textAlign(p5.LEFT, p5.BOTTOM); // Align text to the bottom-left
+          p5.translate(-p5.width / 2, p5.height / 2); // Move origin to bottom-left corner
+          p5.text(`FPS: ${fps}`, 10, -10); // Add padding from edges
+          p5.text(`speed: ${speed}`, 10, -30); // Add padding from edges
+          p5.pop();
+        }
+
+        p5.push();
+        p5.rotateZ(p5.frameCount * speed);
+        p5.rotateX(p5.frameCount * speed);
+        p5.rotateY(p5.frameCount * speed);
+        p5.plane(centerColumnTarget / 2);
+        p5.pop();
+      };
+    },
+    [centerColumnTarget, showDevtools],
+  );
 
   return (
     <PageWrapper>
-      <Canvas ref={ref} />
+      {showDevtools && (
+        <input
+          className="absolute left-0 top-0"
+          type="range"
+          defaultValue={state.speed}
+          min="0.001"
+          max=".02"
+          step="0.0001"
+          onChange={onRotationChange}
+        />
+      )}
+      <NextReactP5Wrapper sketch={sketch} speed={state.speed} />
     </PageWrapper>
   );
 }
