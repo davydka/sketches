@@ -25,7 +25,7 @@ const initialEdges = [{ id: "e1-2", source: "1", target: "2" }];
 
 const PageWrapper = ({ children }: { children: React.ReactNode }) => {
   const dispatch = useAppDispatch();
-  const { showDevtools } = useAppSelector((state) => state.devtools);
+  const showDevtools = useAppSelector((state) => state.devtools.showDevtools);
 
   const centerColumnRef = useRef<HTMLDivElement>(null);
   const { setRef } = useGlobalRefs();
@@ -91,7 +91,9 @@ const PageWrapper = ({ children }: { children: React.ReactNode }) => {
         ])}
       >
         {items.map((item, index) => (
-          <li key={index}>{item}</li>
+          <li key={index} className="cursor-pointer">
+            {item}
+          </li>
         ))}
       </ul>
     );
@@ -116,6 +118,8 @@ const PageWrapper = ({ children }: { children: React.ReactNode }) => {
           className={cn([
             "min-w-0", // Override default grid behavior. By default, a grid item cannot be smaller than the size of its content.
             "relative flex justify-center md:items-center",
+            showDevtools &&
+              "[&_canvas]:rounded-lg [&_canvas]:border [&_canvas]:border-white",
           ])}
           ref={centerColumnRef}
         >
@@ -136,7 +140,7 @@ const PageWrapper = ({ children }: { children: React.ReactNode }) => {
           "bg-secondary text-secondary-foreground p-4 text-center",
         ])}
       >
-        皿
+        <span className="cursor-pointer">皿</span>
       </footer>
 
       <div className="pointer-events-none fixed inset-0 z-50 h-full">
