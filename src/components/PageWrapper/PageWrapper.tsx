@@ -17,11 +17,46 @@ import { cn } from "@/utils/styles";
 import useResize from "@/hooks/useResize/useResize";
 
 const initialNodes = [
-  { id: "1", position: { x: 100, y: 100 }, data: { label: "1" } },
-  { id: "2", position: { x: 100, y: 200 }, data: { label: "2" } },
+  {
+    id: "frameCount",
+    position: { x: 100, y: 100 },
+    data: { label: "Frame Count" },
+  },
+  {
+    id: "speedMultiplier0",
+    position: { x: 100, y: 200 },
+    data: { label: "Speed Multiplier" },
+  },
+  {
+    id: "speedMultiplier1",
+    position: { x: 300, y: 200 },
+    data: { label: "Speed Multiplier" },
+  },
+  {
+    id: "speedMultiplier2",
+    position: { x: 500, y: 200 },
+    data: { label: "Speed Multiplier" },
+  },
+  {
+    id: "rotationX",
+    position: { x: 100, y: 300 },
+    data: { label: "Rotation X" },
+  },
+  {
+    id: "rotationY",
+    position: { x: 300, y: 300 },
+    data: { label: "Rotation Y" },
+  },
+  {
+    id: "rotationZ",
+    position: { x: 500, y: 300 },
+    data: { label: "Rotation Z" },
+  },
 ];
 
-const initialEdges = [{ id: "e1-2", source: "1", target: "2" }];
+const initialEdges = [
+  { id: "e1-2", source: "frameCount", target: "speedMultiplier0" },
+];
 
 const PageWrapper = ({ children }: { children: React.ReactNode }) => {
   const dispatch = useAppDispatch();
